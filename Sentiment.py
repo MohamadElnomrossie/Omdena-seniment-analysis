@@ -7,6 +7,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import one_hot
 
 from utils import helper
+from utils.config import config
 
 
 class SentimentAnalysis:
@@ -18,11 +19,13 @@ class SentimentAnalysis:
         self.embedding_vector = embedding_vector
 
 
-    def tokenize(self, text, stop_words=['and', 'a', 'is', 'the', 'in', 'be', 'will']):
-        tokens, maxlen = self.tokenizer(text, stop_words)
-        if not self.maxlen:
+    def tokenize(self, text, punctuations=[], stop_words=[]):
+        tokens, maxlen, vocab = self.tokenizer(text, punctuations, stop_words)
+        if self.maxlen == 'auto':
             self.maxlen = maxlen
-
+        if self.vocab_size == 'auto':
+            self.vocab_size = vocab
+        print(vocab)
         return tokens
 
 
@@ -39,12 +42,11 @@ class SentimentAnalysis:
         word_dict = helper.word_dictionary(all_)
 
         label = preprocessing.LabelEncoder().fit_transform(label)
-
         return vector, label, list(word_dict.keys()), word_dict
 
 
     def fit(self, text, label, epochs=10, test_size=0.2):
-
+        print(text.shape)
         trainX, validX, trainY, validY = model_selection.train_test_split(text, label, random_state=42, shuffle=True)
         print(trainX.shape, validX.shape, trainY.shape, validY.shape)
 
@@ -60,13 +62,15 @@ class SentimentAnalysis:
         model.fit(trainX, trainY, validation_data=(validX, validY), epochs=epochs, callbacks=[es, mc], verbose=1)
         model.save_weights("models/weights.h5", overwrite=True)
         loss, acc = model.evaluate(validX, validY, workers=-1)
-        print("Validation loss: {}  Validatoin acc: {}".format(loss, acc))
+        print("Validation loss: {}  Validation acc: {}".format(loss, acc))
 
         return model
 
-    def predict(self, text, model):
-        for i in text:
-            pred = helper.get_prediction(self.tokenize, self.vectorize, i, model)
+    def predict_(self, text, model):
+        text = helper.predict(text, model, self.tokenizer, self.vocab_size, self.maxlen)
+        pred = model.predict(text)
+        for p in pred:
             print('-'*20)
-            print("Positive" if pred[0][0] > 0.5 else "Negative")
+            print("Positive" if p[0] > 0.5 else "Negative")
             print('-'*20)
+        

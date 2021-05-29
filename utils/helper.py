@@ -1,6 +1,8 @@
 from tensorflow.keras import regularizers
 from tensorflow.keras.layers import *
 from tensorflow.keras.models import *
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import one_hot
 
 
 def word_dictionary(text):
@@ -11,17 +13,23 @@ def word_dictionary(text):
 
     return dictionary
 
-def get_prediction(tokenizer, encode, text, model):
-    text = tokenizer(text)
-    text, _,_ = encode(text)
-    pred = model.predict(text)
-    return pred
+def predict(text, model, tokenize, vocab, maxlen):
+    text, _, _ = tokenize(text)
+    vector, temp = [], []
+    for d in text:
+        for i in d:
+            temp.extend(one_hot(i, vocab))
+        vector.append(temp)
+        temp=[]
+    vector = pad_sequences(vector, maxlen=maxlen, padding="post")
+    return vector
 
 def get_model(X, y, vocab_size, embedding_size, maxlen, method):
     if method == "simpleRNN":
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
         model.add(SimpleRNN(64,return_sequences=True))
+        model.add(Flatten())
         model.add(Dropout(0.2))
         model.add(Dense(1, activation='sigmoid'))
     
@@ -29,6 +37,7 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
         model.add(Bidirectional(LSTM(64, activation='relu')))
+        model.add(Flatten())
         model.add(Dropout(0.2))
         model.add(Dense(1, activation='sigmoid'))
 
@@ -46,6 +55,7 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
         model.add(LSTM(64, activation='relu'))
+        model.add(Flatten())
         model.add(Dropout(0.2))
         model.add(Dense(1, activation='sigmoid'))
 
