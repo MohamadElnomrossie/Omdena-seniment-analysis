@@ -1,5 +1,7 @@
-from utils.config import config
 import re
+
+from utils.config import config
+
 
 def tokenizer(
     texts:list,

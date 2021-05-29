@@ -1,9 +1,12 @@
+import os
+
 import numpy as np
 import pandas as pd
-import os
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
 import tensorflow as tf
+
 from Sentiment import SentimentAnalysis
 from utils import helper, preprocess
 from utils.config import config
@@ -17,7 +20,7 @@ Yet to do:
 
 if __name__ == '__main__':
 
-    data = pd.read_csv("F:/Internship/Omdena/Arabic-Chapter/data/IMDB Dataset.csv", nrows=1000)
+    data = pd.read_csv(config['data_path'])
     text, label = data['review'], data['sentiment']
 
 

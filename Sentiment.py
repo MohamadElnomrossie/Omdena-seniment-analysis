@@ -25,7 +25,6 @@ class SentimentAnalysis:
             self.maxlen = maxlen
         if self.vocab_size == 'auto':
             self.vocab_size = vocab
-        print(vocab)
         return tokens
 
 
@@ -46,9 +45,7 @@ class SentimentAnalysis:
 
 
     def fit(self, text, label, epochs=10, test_size=0.2):
-        print(text.shape)
         trainX, validX, trainY, validY = model_selection.train_test_split(text, label, random_state=42, shuffle=True)
-        print(trainX.shape, validX.shape, trainY.shape, validY.shape)
 
         # trainX = tf.Tensor(tf.data.Dataset.from_tensors(tf.constant(trainX)).batch(16, drop_remainder=True), value_index=, dtype=tf.int32)
         # validY = tf.constant(validY).set_shape([16, validY.shape[0], validY.shape[1]])
@@ -58,9 +55,9 @@ class SentimentAnalysis:
         print(model.summary())
 
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1,patience=3)  
-        mc = ModelCheckpoint('models/model.h5', monitor='val_loss', mode='min', save_best_only=True,verbose=1)
+        mc = ModelCheckpoint(config['save_model_path'], monitor='val_loss', mode='min', save_best_only=True,verbose=1)
         model.fit(trainX, trainY, validation_data=(validX, validY), epochs=epochs, callbacks=[es, mc], verbose=1)
-        model.save_weights("models/weights.h5", overwrite=True)
+        model.save_weights(config['save_weights_path'], overwrite=True)
         loss, acc = model.evaluate(validX, validY, workers=-1)
         print("Validation loss: {}  Validation acc: {}".format(loss, acc))
 
@@ -71,6 +68,6 @@ class SentimentAnalysis:
         pred = model.predict(text)
         for p in pred:
             print('-'*20)
-            print("Positive" if p[0] > 0.5 else "Negative")
+            print(f"Positive {p[0]}" if p[0] > 0.5 else f"Negative {p[0]}")
             print('-'*20)
         
