@@ -16,6 +16,7 @@ def word_dictionary(text):
 def predict(text, model, tokenize, vocab, maxlen):
     text, _, _ = tokenize(text)
     vector, temp = [], []
+    print(text)
     for d in text:
         for i in d:
             temp.extend(one_hot(i, vocab))
@@ -30,33 +31,42 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
         model.add(SimpleRNN(64,return_sequences=True))
         model.add(Flatten())
+        model.add(Dense(64, activation='relu'))
         model.add(Dropout(0.2))
-        model.add(Dense(1, activation='sigmoid'))
+        model.add(Dense(3, activation='softmax'))
     
     elif method == "bidRNN":
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
-        model.add(Bidirectional(LSTM(64, activation='relu')))
+        model.add(Bidirectional(LSTM(64, return_sequences=True)))
+        model.add(Bidirectional(LSTM(64)))
         model.add(Flatten())
         model.add(Dropout(0.2))
-        model.add(Dense(1, activation='sigmoid'))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dropout(0.2))
+        model.add(Dense(16, activation='relu'))
+        model.add(Dropout(0.2))
+        model.add(Dense(3, activation='softmax'))
 
     elif method == "1DConv":
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
         model.add(Conv1D(20, 6, activation='relu',kernel_regularizer=regularizers.l1_l2(l1=2e-3, l2=2e-3),bias_regularizer=regularizers.l2(2e-3)))
         model.add(MaxPooling1D(5))
-        model.add(Dropout(0.2))
-        model.add(Conv1D(20, 6, activation='relu',kernel_regularizer=regularizers.l1_l2(l1=2e-3, l2=2e-3),bias_regularizer=regularizers.l2(2e-3)))
+        model.add(Dropout(0.1))
         model.add(GlobalMaxPooling1D())
-        model.add(Dense(1, activation='sigmoid'))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dropout(0.2))
+        model.add(Dense(3, activation='softmax'))
 
     elif method == "lstm":
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
-        model.add(LSTM(64, activation='relu'))
+        model.add(LSTM(64, return_sequences=True))
         model.add(Flatten())
         model.add(Dropout(0.2))
-        model.add(Dense(1, activation='sigmoid'))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dropout(0.2))
+        model.add(Dense(3, activation='softmax'))
 
     return model

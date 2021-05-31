@@ -20,8 +20,9 @@ Yet to do:
 
 if __name__ == '__main__':
 
-    data = pd.read_csv(config['data_path'], nrows=5000)
-    text, label = data['Feed'], data['Sentiment']
+    data = pd.read_csv(config['data_path'])
+    data = data.dropna().reset_index(drop=True)
+    text, label = data['cleaned_text'], data['Class_camel']
 
 
     #Check config file to alter the hyperparameters
@@ -32,7 +33,7 @@ if __name__ == '__main__':
     model = sentiment.fit(text, label, epochs=config['epochs'], test_size=config['test_size'])
 
     #Validation
-    text = ["Today is a bad day for me!", 
-            "I'm happy"]
-    # model = tf.keras.models.load_model("./models/model.h5")
+    text = ["حقوق المراه", 
+            "لان تبني حقوق المراه من وجهه نظر علمانيه وتحرريه يضر بمجتمعي ويضر بالنساء والرجال علي حد سواء بس هم ليش مهتمين وحاشرين خشومهم"]
+    model = tf.keras.models.load_model("models/model.h5")
     sentiment.predict_(text, model)

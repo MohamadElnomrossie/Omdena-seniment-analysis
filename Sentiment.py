@@ -25,6 +25,7 @@ class SentimentAnalysis:
             self.maxlen = maxlen
         if self.vocab_size == 'auto':
             self.vocab_size = vocab
+        print(vocab, maxlen)
         return tokens
 
 
@@ -40,7 +41,10 @@ class SentimentAnalysis:
             all_.extend(x)
         word_dict = helper.word_dictionary(all_)
 
-        label = preprocessing.LabelEncoder().fit_transform(label)
+        #label = preprocessing.LabelEncoder().fit_transform(label)
+        onehot_encoder = preprocessing.OneHotEncoder(sparse=False)
+        label = np.array(label).reshape(len(label), 1)
+        label = onehot_encoder.fit_transform(label)
         return vector, label, list(word_dict.keys()), word_dict
 
 
@@ -49,9 +53,9 @@ class SentimentAnalysis:
 
         # trainX = tf.Tensor(tf.data.Dataset.from_tensors(tf.constant(trainX)).batch(16, drop_remainder=True), value_index=, dtype=tf.int32)
         # validY = tf.constant(validY).set_shape([16, validY.shape[0], validY.shape[1]])
-        
+        print(trainX.shape, validX.shape, trainY.shape, validY.shape)
         model = helper.get_model(trainX, trainY, self.vocab_size, self.embedding_vector, self.maxlen, self.method)
-        model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+        model.compile(optimizer="adam", loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy"])
         print(model.summary())
 
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1,patience=3)  
@@ -66,8 +70,15 @@ class SentimentAnalysis:
     def predict_(self, text, model):
         text = helper.predict(text, model, self.tokenizer, self.vocab_size, self.maxlen)
         pred = model.predict(text)
+        print(pred)
         for p in pred:
             print('-'*20)
-            print(f"Positive {p[0]}" if p[0] > 0.5 else f"Negative {p[0]}")
+            pp = np.argmax(p)
+            if pp == 0:
+                print(f"Neutral {p[pp]}")
+            elif pp == 1:
+                print(f"Negative {p[pp]}")
+            else:
+                print(f"Positive {p[pp]}")
             print('-'*20)
         

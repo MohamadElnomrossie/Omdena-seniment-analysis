@@ -4,7 +4,7 @@ config = {
     'maxlen':'auto',# 1500
     'embedding_vector':10,
 
-    'method':'simpleRNN',
+    'method':'bidRNN',
     'stop_words':['and', 'a', 'is', 'the', 'in', 'be', 'will', 't', 'll', 'of', 'to', 'was', 'its', 'm', 've'],
     'punctuations':"""'!"#$%&'()*+,«».؛،/:؟?@[\]^_`{|}~""",
 
@@ -13,5 +13,5 @@ config = {
 
     'save_model_path':'models/model.h5',
     'save_weights_path':"models/weights.h5",
-    'data_path':"Datasets/AJGT.xlsx"
+    'data_path':"Datasets/Final_Dataset/Dataset/train.csv"
 }
