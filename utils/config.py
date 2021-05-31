@@ -8,10 +8,10 @@ config = {
     'stop_words':['and', 'a', 'is', 'the', 'in', 'be', 'will', 't', 'll', 'of', 'to', 'was', 'its', 'm', 've'],
     'punctuations':"""'!"#$%&'()*+,«».؛،/:؟?@[\]^_`{|}~""",
 
-    'epochs':50,
+    'epochs':8,
     'test_size':0.2,
 
     'save_model_path':'models/model.h5',
     'save_weights_path':"models/weights.h5",
-    'data_path':"data/IMDB Dataset.csv"
+    'data_path':"Datasets/AJGT.xlsx"
 }

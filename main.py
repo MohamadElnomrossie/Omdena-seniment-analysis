@@ -20,8 +20,8 @@ Yet to do:
 
 if __name__ == '__main__':
 
-    data = pd.read_csv(config['data_path'])
-    text, label = data['review'], data['sentiment']
+    data = pd.read_csv(config['data_path'], nrows=5000)
+    text, label = data['Feed'], data['Sentiment']
 
 
     #Check config file to alter the hyperparameters
