@@ -1,7 +1,7 @@
 # Models: 
 
-- Linear SVM
-- Logistic regression
+- Naive Bayes (Gaussian, Bernoulli, Multinomial)
+- Adaboost classifier (Decision trees)
 
 # Features:
 features used is union of 
@@ -17,8 +17,4 @@ features used is union of
 - TF-IDF ngram 7 char level
 - CountVector ngram 3
 - CountVector ngram 5
-
-# Accuracy
-![Alt text](images/SVM_results.png?raw=true "SVM")
-![Alt text](images/LR_results.png?raw=true "LR")
 
