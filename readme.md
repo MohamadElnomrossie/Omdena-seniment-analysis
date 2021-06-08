@@ -1,17 +1,17 @@
 # Labels
-0: neutral
-1: negative
-2: positive
-## ==============================================================================================
+0: neutral<br>
+1: negative<br>
+2: positive<br>
+## ==================================================
 ## Words have been normalized as follows:
-1. ة has been replaced with ه
-2. أ,إ,آ have been replaced with ا
-3. ى has been replaced with ي
-## ===============================================================================================
+1. ة has been replaced with ه<br>
+2. أ,إ,آ have been replaced with ا<br>
+3. ى has been replaced with ي<br>
+## ==================================================
 ## Text has been normalized as follows:
 stop words,diacritics, emojis, numbers, double-spaces ,non-Arabic characters, and حروف العطف have been removed
-## ==============================================================================================
+## ==================================================
 ## Fields:
-```final```: clean text
-```label```: labels
-```length```: the length of the string after cleaning
+```final```: clean text<br>
+```label```: labels<br>
+```length```: the length of the string after cleaning<br>
