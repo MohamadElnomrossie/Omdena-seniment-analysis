@@ -17,3 +17,6 @@ stop words,diacritics, emojis, numbers, double-spaces ,non-Arabic characters, an
 ```length```: the length of the string after cleaning<br>
 ## ==================================================
 The  ```json``` file is the dataset we received so far from the data team. We will receive another version this week isA.
+<br>
+<strong>Raw data file</strong>
+<a href="https://omdenalocalch-iqn1709.slack.com/files/U021ERHMF5M/F0238G2FH0X/sentiment_analysis_dataset.json"></a>
