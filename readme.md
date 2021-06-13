@@ -15,3 +15,5 @@ stop words,diacritics, emojis, numbers, double-spaces ,non-Arabic characters, an
 ```final```: clean text<br>
 ```label```: labels<br>
 ```length```: the length of the string after cleaning<br>
+## ==================================================
+The  ```json``` file is the dataset we received so far from the data team. We will receive another version this week isA.
