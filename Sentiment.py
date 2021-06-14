@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from sklearn import model_selection, preprocessing
+from sklearn import model_selection, preprocessing, metrics
 from tensorflow.keras.callbacks import *
 from tensorflow.keras.layers import *
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -48,29 +48,32 @@ class SentimentAnalysis:
         return vector, label, list(word_dict.keys()), word_dict
 
 
-    def fit(self, text, label, epochs=10, test_size=0.2):
-        trainX, validX, trainY, validY = model_selection.train_test_split(text, label, random_state=42, shuffle=True)
+    def fit(self, trainX, trainY, validation_data=(), epochs=10, method='simpleRNN'):
+        # trainX, validX, trainY, validY = model_selection.train_test_split(text, label, test_size=test_size, random_state=42, shuffle=True)
 
+        validX, validY = validation_data
         # trainX = tf.Tensor(tf.data.Dataset.from_tensors(tf.constant(trainX)).batch(16, drop_remainder=True), value_index=, dtype=tf.int32)
         # validY = tf.constant(validY).set_shape([16, validY.shape[0], validY.shape[1]])
         print(trainX.shape, validX.shape, trainY.shape, validY.shape)
         model = helper.get_model(trainX, trainY, self.vocab_size, self.embedding_vector, self.maxlen, self.method)
         model.compile(optimizer="adam", loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy"])
-        print(model.summary())
+        # print(model.summary())
 
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1,patience=3)  
-        mc = ModelCheckpoint(config['save_model_path'], monitor='val_loss', mode='min', save_best_only=True,verbose=1)
+        mc = ModelCheckpoint(config['save_model_path'] + method + "_model.h5", monitor='val_loss', mode='min', save_best_only=True,verbose=1)
         model.fit(trainX, trainY, validation_data=(validX, validY), epochs=epochs, callbacks=[es, mc], verbose=1)
-        model.save_weights(config['save_weights_path'], overwrite=True)
-        loss, acc = model.evaluate(validX, validY, workers=-1)
-        print("Validation loss: {}  Validation acc: {}".format(loss, acc))
+        model.save_weights(config['save_weights_path'] + method + "_weights.h5", overwrite=True)
 
         return model
 
-    def predict_(self, text, model):
+    def evaluate(self, text, label, model, batch_size=32):
+        loss, acc = model.evaluate(text, label, workers=-1, batch_size=batch_size)
+        print("\nValidation loss: {}  Validation acc: {}".format(loss, acc))
+
+    def predict_(self, text, model, batch_size=32):
         text = helper.predict(text, model, self.tokenizer, self.vocab_size, self.maxlen)
-        pred = model.predict(text)
-        print(pred)
+        pred = model.predict(text, batch_size=batch_size)
+        # print(pred)
         for p in pred:
             print('-'*20)
             pp = np.argmax(p)

@@ -16,7 +16,6 @@ def word_dictionary(text):
 def predict(text, model, tokenize, vocab, maxlen):
     text, _, _ = tokenize(text)
     vector, temp = [], []
-    print(text)
     for d in text:
         for i in d:
             temp.extend(one_hot(i, vocab))
@@ -31,6 +30,7 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
         model.add(SimpleRNN(64,return_sequences=True))
         model.add(Flatten())
+        model.add(Dropout(0.2))
         model.add(Dense(64, activation='relu'))
         model.add(Dropout(0.2))
         model.add(Dense(3, activation='softmax'))
@@ -39,12 +39,9 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
         model.add(Bidirectional(LSTM(64, return_sequences=True)))
-        model.add(Bidirectional(LSTM(64)))
         model.add(Flatten())
         model.add(Dropout(0.2))
         model.add(Dense(64, activation='relu'))
-        model.add(Dropout(0.2))
-        model.add(Dense(16, activation='relu'))
         model.add(Dropout(0.2))
         model.add(Dense(3, activation='softmax'))
 
@@ -55,6 +52,7 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(MaxPooling1D(5))
         model.add(Dropout(0.1))
         model.add(GlobalMaxPooling1D())
+        model.add(Dropout(0.2))
         model.add(Dense(64, activation='relu'))
         model.add(Dropout(0.2))
         model.add(Dense(3, activation='softmax'))
@@ -62,9 +60,10 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
     elif method == "lstm":
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
-        model.add(LSTM(64, return_sequences=True))
+        model.add(LSTM(128, return_sequences=True))
         model.add(Flatten())
         model.add(Dropout(0.2))
+        model.add(Dense(128, activation='relu'))
         model.add(Dense(64, activation='relu'))
         model.add(Dropout(0.2))
         model.add(Dense(3, activation='softmax'))
