@@ -5,4 +5,4 @@ class Sentiment_Analysis:
             print('up')
             self.pipeline=Sentiment_analysis()
     def predict(self,text):
-        self.pipeline.inference(text)
+        return self.pipeline.inference(text)
