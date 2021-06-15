@@ -56,7 +56,7 @@ class SentimentAnalysis:
         # validY = tf.constant(validY).set_shape([16, validY.shape[0], validY.shape[1]])
         print(trainX.shape, validX.shape, trainY.shape, validY.shape)
         model = helper.get_model(trainX, trainY, self.vocab_size, self.embedding_vector, self.maxlen, self.method)
-        model.compile(optimizer="adam", loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy"])
+        model.compile(optimizer="adam", loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy",tf.keras.metrics.Precision(),tf.keras.metrics.Recall(),tf.keras.metrics.AUC()])
         # print(model.summary())
 
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1,patience=3)  
@@ -67,8 +67,8 @@ class SentimentAnalysis:
         return model
 
     def evaluate(self, text, label, model, batch_size=32):
-        loss, acc = model.evaluate(text, label, workers=-1, batch_size=batch_size)
-        print("\nValidation loss: {}  Validation acc: {}".format(loss, acc))
+        loss, acc, pre, rec, auc  = model.evaluate(text, label, workers=-1, batch_size=batch_size)
+        print("\nValidation loss: {}  Validation acc: {} Precision: {} Recall: {} Auc Roc: {}".format(loss, acc, pre, rec, auc))
 
     def predict_(self, text, model, batch_size=32):
         text = helper.predict(text, model, self.tokenizer, self.vocab_size, self.maxlen)
