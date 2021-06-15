@@ -28,13 +28,14 @@ if __name__ == '__main__':
     val_data = val_data.dropna().reset_index(drop=True)
     test_data = test_data.dropna().reset_index(drop=True)
 
-    train_text, train_label = train_data['cleaned_text'].values, train_data['Class_camel'].values
-    val_text, val_label = val_data['cleaned_text'].values, val_data['Class_camel'].values
-    test_text, test_label = test_data['cleaned_text'].values.copy(), test_data['Class_camel'].values.copy()
+    train_text, train_label = train_data['Text'].values, train_data['Class_camel'].values
+    val_text, val_label = val_data['Text'].values, val_data['Class_camel'].values
+    test_text, test_label = test_data['Text'].values.copy(), test_data['Class_camel'].values.copy()
 
 
     #Check config file to alter the hyperparameters
     sentiment = SentimentAnalysis(preprocess.tokenizer, vocab_size=config['vocab_size'], maxlen=config['maxlen'], embedding_vector=config['embedding_vector'], method=config['method'],)
+    
     train_text = sentiment.tokenize(train_text, punctuations=config['punctuations'], stop_words=config['stop_words'])
     train_text, train_label, unique_words, word_dict = sentiment.vectorize(train_text, train_label)
 
@@ -48,7 +49,7 @@ if __name__ == '__main__':
     sentiment.evaluate(test_text, test_label, model, batch_size=32)
 
     #Validation
-    text = test_data['cleaned_text']
+    text = test_data['Text']
     model = tf.keras.models.load_model("models/lstm_model.h5")
     sentiment.predict_(text[:4], model, batch_size=32)
     
