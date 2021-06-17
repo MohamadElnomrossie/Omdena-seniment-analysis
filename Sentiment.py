@@ -11,7 +11,7 @@ from utils.config import config
 
 
 class SentimentAnalysis:
-    def __init__(self, tokenizer, vocab_size=30, maxlen=10, embedding_vector=5, method="simpleRNN"):
+    def __init__(self, tokenizer, vocab_size=30000, maxlen=256, embedding_vector=50, method="simpleRNN"):
         self.method = method
         self.tokenizer = tokenizer
         self.vocab_size = vocab_size
@@ -25,7 +25,7 @@ class SentimentAnalysis:
             self.maxlen = maxlen
         if self.vocab_size == 'auto':
             self.vocab_size = vocab
-        print(vocab, maxlen)
+        # print(vocab, maxlen)
         return tokens
 
 
