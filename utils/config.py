@@ -8,12 +8,12 @@ config = {
     'maxlen':256,
     'embedding_vector':50,
 
-    'method':'bidRNN',
+    'method':'lstm',
     'stop_words':stop_words,
     'punctuations':"""'!"-#$%&'()*+,«».؛،/:؟?@[\]^_`{|}~""",
 
     'epochs':5,
-    'optim':'SGD',
+    'optim':'adamax',
     'learning_rate':1e-3,
 
     'save_model_path':'models/',

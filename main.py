@@ -28,6 +28,10 @@ if __name__ == '__main__':
     val_data = val_data.dropna().reset_index(drop=True)
     test_data = test_data.dropna().reset_index(drop=True)
 
+    train_data = helper.get_folds(train_data, 'cleaned_text', 'Class_camel', split=2, getvalue=0)
+    val_data = helper.get_folds(val_data, 'cleaned_text', 'Class_camel', split=2, getvalue=0)
+    test_data = helper.get_folds(test_data, 'cleaned_text', 'Class_camel', split=2, getvalue=0)
+
     train_text, train_label = train_data['cleaned_text'].values, train_data['Class_camel'].values
     val_text, val_label = val_data['cleaned_text'].values, val_data['Class_camel'].values
     test_text, test_label = test_data['cleaned_text'].values.copy(), test_data['Class_camel'].values.copy()
@@ -49,7 +53,21 @@ if __name__ == '__main__':
     sentiment.evaluate(test_text, test_label, model, batch_size=32)
 
     #Validation
-    text = test_data['cleaned_text']
+    # text = test_data['cleaned_text']
     # model = tf.keras.models.load_model("models/lstm_model.h5")
-    sentiment.predict_(text[:4], model, batch_size=32)
+    # sentiment.predict_(text[:4], model, batch_size=32)
+    print("Text : {}\nLabel : {}\n".format(
+            test_data['cleaned_text'].iloc[45],
+            test_data['Class_camel'].iloc[45]))
+    print(sentiment.predict_([test_data['cleaned_text'].iloc[45]], model, batch_size=32))
+
+    print("\nText : {}\nLabel : {}\nPrediction : {}".format(
+            test_data['cleaned_text'].iloc[0],
+            test_data['Class_camel'].iloc[0]))
+    print(sentiment.predict_([test_data['cleaned_text'].iloc[0]], model, batch_size=32))
+
+    print("\nText : {}\nLabel : {}\nPrediction : {}".format(
+            test_data['cleaned_text'].iloc[35],
+            test_data['Class_camel'].iloc[35]))
+    print(sentiment.predict_([test_data['cleaned_text'].iloc[35]], model, batch_size=32))
     
