@@ -78,9 +78,9 @@ class SentimentAnalysis:
             print('-'*20)
             pp = np.argmax(p)
             if pp == 0:
-                print(f"Neutral {p[pp]}")
-            elif pp == 1:
                 print(f"Negative {p[pp]}")
+            elif pp == 1:
+                print(f"Neutral {p[pp]}")
             else:
                 print(f"Positive {p[pp]}")
             print('-'*20)

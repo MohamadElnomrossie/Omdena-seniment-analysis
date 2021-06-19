@@ -50,6 +50,6 @@ if __name__ == '__main__':
 
     #Validation
     text = test_data['Text']
-    model = tf.keras.models.load_model("models/lstm_model.h5")
+    # model = tf.keras.models.load_model("models/lstm_model.h5")
     sentiment.predict_(text[:4], model, batch_size=32)
     
