@@ -4,16 +4,17 @@ with open("Datasets/stopWords.pkl", 'rb') as f:
     stop_words = list(set(stop_words + ['و','في','من','بواسطة','أ','هو','و','في','سيكون','إلى','كان','كن','هو','ال','و','ما','ء','ه','س']))
 
 config = {
-    'vocab_size':60000,# 1200
-    'maxlen':256,# 150
+    'vocab_size':60000,
+    'maxlen':256,
     'embedding_vector':50,
 
-    'method':'lstm',
+    'method':'bidRNN',
     'stop_words':stop_words,
     'punctuations':"""'!"-#$%&'()*+,«».؛،/:؟?@[\]^_`{|}~""",
 
-    'epochs':3,
-    # 'test_size':0.2,
+    'epochs':5,
+    'optim':'SGD',
+    'learning_rate':1e-3,
 
     'save_model_path':'models/',
     'save_weights_path':"models/",

@@ -3,6 +3,7 @@ import tensorflow as tf
 from sklearn import model_selection, preprocessing, metrics
 from tensorflow.keras.callbacks import *
 from tensorflow.keras.layers import *
+from tensorflow.keras.optimizers import Adam, SGD, RMSprop, Adamax, Adadelta
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import one_hot
 
@@ -17,6 +18,11 @@ class SentimentAnalysis:
         self.vocab_size = vocab_size
         self.maxlen = maxlen
         self.embedding_vector = embedding_vector
+        self.optim = {'adam':Adam,
+                    'adamax':Adamax,
+                    'adadelta':Adadelta,
+                    'SGD':SGD,
+                    'RMSprop':RMSprop}
 
 
     def tokenize(self, text, punctuations=[], stop_words=[]):
@@ -56,7 +62,7 @@ class SentimentAnalysis:
         # validY = tf.constant(validY).set_shape([16, validY.shape[0], validY.shape[1]])
         print(trainX.shape, validX.shape, trainY.shape, validY.shape)
         model = helper.get_model(trainX, trainY, self.vocab_size, self.embedding_vector, self.maxlen, self.method)
-        model.compile(optimizer="SGD", loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy",tf.keras.metrics.Precision(),tf.keras.metrics.Recall(),tf.keras.metrics.AUC()])
+        model.compile(optimizer=self.optim[config['optim']](learning_rate=config['learning_rate']), loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy",tf.keras.metrics.Precision(),tf.keras.metrics.Recall(),tf.keras.metrics.AUC()])
         # print(model.summary())
 
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1,patience=3)  
@@ -78,9 +84,9 @@ class SentimentAnalysis:
             print('-'*20)
             pp = np.argmax(p)
             if pp == 0:
-                print(f"Neutral {p[pp]}")
-            elif pp == 1:
                 print(f"Negative {p[pp]}")
+            elif pp == 1:
+                print(f"Neutral {p[pp]}")
             else:
                 print(f"Positive {p[pp]}")
             print('-'*20)
