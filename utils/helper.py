@@ -58,6 +58,18 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(Dense(32, activation='relu'))
         model.add(Dense(32, activation='relu'))
         model.add(Dense(3, activation='softmax'))
+        
+    elif method == "1DConv":
+        model = Sequential()
+        model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
+        model.add(Conv1D(20, 6, activation='relu',kernel_regularizer=regularizers.l1_l2(l1=2e-3, l2=2e-3),bias_regularizer=regularizers.l2(2e-3)))
+        model.add(MaxPooling1D(5))
+        model.add(Dropout(0.1))
+        model.add(GlobalMaxPooling1D())
+        model.add(Dropout(0.2))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dropout(0.2))
+        model.add(Dense(3, activation='softmax'))
 
     elif method == "lstm":
         sequence = Input(shape=(maxlen,), dtype='int32')
