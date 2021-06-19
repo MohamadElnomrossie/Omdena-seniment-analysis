@@ -31,9 +31,9 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(SimpleRNN(64))
         model.add(Flatten())
         model.add(Dense(64, activation='relu'))
-        model.add(Dropout(0.1))
+        model.add(Dropout(0.2))
         model.add(Dense(32, activation='relu'))
-        model.add(Dropout(0.1))
+        model.add(Dropout(0.2))
         model.add(Dense(3, activation='softmax'))
     
     elif method == "bidRNN":
@@ -54,21 +54,20 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(MaxPooling1D(5))
         model.add(GlobalMaxPooling1D())
         model.add(Dense(64, activation='relu'))
-        model.add(Dropout(0.1))
+        model.add(Dropout(0.2))
         model.add(Dense(32, activation='relu'))
-        model.add(Dropout(0.1))
+        model.add(Dropout(0.2))
         model.add(Dense(3, activation='softmax'))
 
     elif method == "lstm":
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
-        # model.add(LSTM(128, return_sequences=True))
         model.add(LSTM(64))
         model.add(Flatten())
         model.add(Dense(64, activation='relu'))
-        model.add(Dropout(0.1))
+        model.add(Dropout(0.2))
         model.add(Dense(32, activation='relu'))
-        model.add(Dropout(0.1))
+        model.add(Dropout(0.2))
         model.add(Dense(3, activation='softmax'))
 
     return model
