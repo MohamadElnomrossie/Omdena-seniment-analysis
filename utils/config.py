@@ -8,11 +8,11 @@ config = {
     'maxlen':256,# 150
     'embedding_vector':50,
 
-    'method':'lstm',
+    'method':'1DConv',
     'stop_words':stop_words,
     'punctuations':"""'!"-#$%&'()*+,«».؛،/:؟?@[\]^_`{|}~""",
 
-    'epochs':13,
+    'epochs':25,
     # 'test_size':0.2,
 
     'save_model_path':'models/',
