@@ -35,7 +35,7 @@ class SentimentAnalysis:
         return tokens
 
 
-    def vectorize(self, text, label):
+    def vectorize(self, text, label=[]):
         vector, temp, all_ = [], [], []
         for d in text:
             for i in d:
