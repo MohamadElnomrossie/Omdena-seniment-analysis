@@ -46,12 +46,13 @@ class SentimentAnalysis:
         for x in text:
             all_.extend(x)
         word_dict = helper.word_dictionary(all_)
-
-        #label = preprocessing.LabelEncoder().fit_transform(label)
-        onehot_encoder = preprocessing.OneHotEncoder(sparse=False)
-        label = np.array(label).reshape(len(label), 1)
-        label = onehot_encoder.fit_transform(label)
-        return vector, label, list(word_dict.keys()), word_dict
+        if label:
+            #label = preprocessing.LabelEncoder().fit_transform(label)
+            onehot_encoder = preprocessing.OneHotEncoder(sparse=False)
+            label = np.array(label).reshape(len(label), 1)
+            label = onehot_encoder.fit_transform(label)
+            return vector, label, list(word_dict.keys()), word_dict
+        return vector, list(word_dict.keys()), word_dict
 
 
     def fit(self, trainX, trainY, validation_data=(), epochs=10, method='simpleRNN'):
