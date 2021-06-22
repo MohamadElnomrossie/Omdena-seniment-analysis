@@ -77,18 +77,21 @@ class SentimentAnalysis:
         loss, acc, pre, rec, auc  = model.evaluate(text, label, workers=-1, batch_size=batch_size)
         print("\nValidation loss: {}  Validation acc: {} Precision: {} Recall: {} Auc Roc: {}".format(loss, acc, pre, rec, auc))
 
-    def predict_(self, text, model, batch_size=32):
+    def predict_(self, text, model, batch_size=32, print_=True):
         text = helper.predict(text, model, self.tokenizer, self.vocab_size, self.maxlen)
         pred = model.predict(text, batch_size=batch_size)
         # print(pred)
-        for p in pred:
-            print('-'*20)
-            pp = np.argmax(p)
-            if pp == 0:
-                print(f"Negative {p[pp]}")
-            elif pp == 1:
-                print(f"Neutral {p[pp]}")
-            else:
-                print(f"Positive {p[pp]}")
-            print('-'*20)
-        
+        if print_:
+            for p in pred:
+                print('-'*20)
+                pp = np.argmax(p)
+                if pp == 0:
+                    print(f"Negative {p[pp]}")
+                elif pp == 1:
+                    print(f"Neutral {p[pp]}")
+                else:
+                    print(f"Positive {p[pp]}")
+                print('-'*20)
+        else:
+            gtruth = ["Negative", "Neutral", "Positive"]
+            return [gtruth[np.argmax(p)] for p in pred]
