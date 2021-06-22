@@ -12,9 +12,9 @@ config = {
     'stop_words':stop_words,
     'punctuations':"""'!"-#$%&'()*+,«».؛،/:؟?@[\]^_`{|}~""",
 
-    'epochs':5,
-    'optim':'adamax',
-    'learning_rate':1e-3,
+    'epochs':50,
+    'optim':'SGD',
+    'learning_rate':1e-1,
 
     'save_model_path':'models/',
     'save_weights_path':"models/",

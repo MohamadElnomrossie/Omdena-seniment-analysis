@@ -56,18 +56,12 @@ if __name__ == '__main__':
     # text = test_data['cleaned_text']
     # model = tf.keras.models.load_model("models/lstm_model.h5")
     # sentiment.predict_(text[:4], model, batch_size=32)
-    print("Text : {}\nLabel : {}\n".format(
-            test_data['cleaned_text'].iloc[45],
-            test_data['Class_camel'].iloc[45]))
+    print(f"\nText : {test_data['cleaned_text'].iloc[45]} Label : {test_data['Class_camel'].iloc[45]}")
     print(sentiment.predict_([test_data['cleaned_text'].iloc[45]], model, batch_size=32))
 
-    print("\nText : {}\nLabel : {}\nPrediction : {}".format(
-            test_data['cleaned_text'].iloc[0],
-            test_data['Class_camel'].iloc[0]))
+    print(f"Text : {test_data['cleaned_text'].iloc[0]} Label : {test_data['Class_camel'].iloc[0]}")
     print(sentiment.predict_([test_data['cleaned_text'].iloc[0]], model, batch_size=32))
 
-    print("\nText : {}\nLabel : {}\nPrediction : {}".format(
-            test_data['cleaned_text'].iloc[35],
-            test_data['Class_camel'].iloc[35]))
+    print(f"Text : {test_data['cleaned_text'].iloc[35]} Label : {test_data['Class_camel'].iloc[35]}")
     print(sentiment.predict_([test_data['cleaned_text'].iloc[35]], model, batch_size=32))
     
