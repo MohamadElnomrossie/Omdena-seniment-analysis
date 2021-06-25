@@ -1,5 +1,5 @@
 import re
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 
 from utils.config import config
 
