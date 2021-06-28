@@ -14,7 +14,7 @@ config = {
 
     'epochs':50,
     'batch_size':32,
-    'optim':'adam', # other - adamax, adadelta, SGD, Adam, RMSprop
+    'optim':'SGD', # other - adamax, adadelta, SGD, Adam, RMSprop
     'learning_rate':5e-3,
 
     'save_model_path':'models/',

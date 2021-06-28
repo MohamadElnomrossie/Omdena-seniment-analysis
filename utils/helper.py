@@ -69,7 +69,6 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(MaxPooling1D(pool_size=3))
         model.add(Convolution1D(filters=64,kernel_size=7,activation='relu', kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
         model.add(MaxPooling1D(pool_size=3))
-        model.add(Dropout(0.5))
         model.add(Convolution1D(filters=32,kernel_size=3,activation='relu', kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
         model.add(MaxPooling1D(pool_size=3))
         model.add(Flatten())
