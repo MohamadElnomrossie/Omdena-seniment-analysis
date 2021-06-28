@@ -54,7 +54,7 @@ class SentimentAnalysis:
         return vector, list(word_dict.keys()), word_dict
 
 
-    def fit(self, trainX, trainY, validation_data=(), epochs=10, method='simpleRNN'):
+    def fit(self, trainX, trainY, validation_data=(), epochs=10, batch_size=32, method='simpleRNN'):
 
         validX, validY = validation_data
         model = helper.get_model(trainX, trainY, self.vocab_size, self.embedding_vector, self.maxlen, self.method)
@@ -63,7 +63,7 @@ class SentimentAnalysis:
         tqdm_callback = tfa.callbacks.TQDMProgressBar()
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1,patience=5)  
         mc = ModelCheckpoint(config['save_model_path'] + method + "_model.h5", monitor='val_loss', mode='min', save_best_only=True,verbose=1)
-        model.fit(trainX, trainY, validation_data=(validX, validY), epochs=epochs, callbacks=[mc, tqdm_callback], verbose=0)
+        model.fit(trainX, trainY, batch_size=batch_size, validation_data=(validX, validY), epochs=epochs, callbacks=[mc, tqdm_callback], verbose=0)
         model.save_weights(config['save_weights_path'] + method + "_weights.h5", overwrite=True)
 
         return model

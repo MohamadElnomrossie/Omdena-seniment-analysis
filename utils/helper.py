@@ -74,9 +74,8 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(MaxPooling1D(pool_size=3))
         model.add(Flatten())
         model.add(Dense(activation='relu',units=64, kernel_regularizer=l2(0.001)))
-        model.add(Dropout(0.2))
+        model.add(Dropout(0.1))
         model.add(Dense(activation='relu',units=32, kernel_regularizer=l2(0.001)))
-        model.add(Dropout(0.2))
         model.add(Dense(units=3,activation='softmax'))
 
     elif method == "lstm":
