@@ -46,19 +46,20 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(Dropout(0.2))
         model.add(Dense(32, activation='relu'))
         model.add(Dropout(0.2))
+        model.add(Dense(32, activation='relu'))
         model.add(Dense(3, activation='softmax'))
     
     elif method == "bidRNN":
-        sequence = Input(shape=(maxlen,), dtype='int32')
-        embedded = Embedding(vocab_size, embedding_size, input_length=maxlen)(sequence)
-        forward_layer = LSTM(64, return_sequences=True)(embedded)
-        backward_layer = LSTM(64, activation='relu', return_sequences=True,
-                            go_backwards=True)(embedded)
-        merged = concatenate([forward_layer, backward_layer])
-        bid = Bidirectional(merged)(merged)
-        after_dp = Dropout(0.5)(bid)
-        output = Dense(3, activation='softmax')(after_dp)
-        model = Model(inputs=sequence, outputs=output)
+        model = Sequential()
+        model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
+        model.add(Bidirectional(LSTM(64)))
+        model.add(Flatten())
+        model.add(Dense(64, activation='relu'))
+        model.add(Dropout(0.2))
+        model.add(Dense(32, activation='relu'))
+        model.add(Dropout(0.2))
+        model.add(Dense(32, activation='relu'))
+        model.add(Dense(3, activation='softmax'))
 
     elif method == "1DConv":
         model = Sequential()
@@ -68,15 +69,12 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(Convolution1D(filters=64,kernel_size=7,activation='relu'))
         model.add(MaxPooling1D(pool_size=3))
         model.add(Convolution1D(filters=32,kernel_size=3,activation='relu'))
-        model.add(Convolution1D(filters=32,kernel_size=3,activation='relu'))
-        model.add(Convolution1D(filters=16,kernel_size=3,activation='relu'))
-        model.add(Convolution1D(filters=16,kernel_size=3,activation='relu'))
         model.add(MaxPooling1D(pool_size=3))
         model.add(Flatten())
         model.add(Dense(activation='relu',units=64))
-        model.add(Dropout(0.5))
+        model.add(Dropout(0.4))
         model.add(Dense(activation='relu',units=32))
-        model.add(Dropout(0.5))
+        model.add(Dropout(0.3))
         model.add(Dense(units=3,activation='softmax'))
 
     elif method == "lstm":
@@ -85,7 +83,7 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         forwards = LSTM(64)(embedded)
         backwards = LSTM(64, go_backwards=True)(embedded)
         merged = concatenate([forwards, backwards])
-        after_dp = Dropout(0.5)(merged)
+        after_dp = Dropout(0.2)(merged)
         output = Dense(3, activation='softmax')(after_dp)
         model = Model(inputs=sequence, outputs=output)
 

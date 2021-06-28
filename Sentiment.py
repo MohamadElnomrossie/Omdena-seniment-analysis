@@ -61,7 +61,7 @@ class SentimentAnalysis:
         validX, validY = validation_data
         # trainX = tf.Tensor(tf.data.Dataset.from_tensors(tf.constant(trainX)).batch(16, drop_remainder=True), value_index=, dtype=tf.int32)
         # validY = tf.constant(validY).set_shape([16, validY.shape[0], validY.shape[1]])
-#         print(trainX.shape, validX.shape, trainY.shape, validY.shape)
+        # print(trainX.shape, validX.shape, trainY.shape, validY.shape)
         model = helper.get_model(trainX, trainY, self.vocab_size, self.embedding_vector, self.maxlen, self.method)
         model.compile(optimizer=self.optim[config['optim']](learning_rate=config['learning_rate']), loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy",tf.keras.metrics.Precision(),tf.keras.metrics.Recall(),tf.keras.metrics.AUC()])
         # print(model.summary())
