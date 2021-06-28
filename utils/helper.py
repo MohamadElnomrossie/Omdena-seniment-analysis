@@ -68,13 +68,14 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(MaxPooling1D(pool_size=3))
         model.add(Convolution1D(filters=64,kernel_size=7,activation='relu'))
         model.add(MaxPooling1D(pool_size=3))
+        model.add(Dropout(0.5))
         model.add(Convolution1D(filters=32,kernel_size=3,activation='relu'))
         model.add(MaxPooling1D(pool_size=3))
         model.add(Flatten())
         model.add(Dense(activation='relu',units=64))
-        model.add(Dropout(0.4))
+        model.add(Dropout(0.2))
         model.add(Dense(activation='relu',units=32))
-        model.add(Dropout(0.3))
+        model.add(Dropout(0.2))
         model.add(Dense(units=3,activation='softmax'))
 
     elif method == "lstm":

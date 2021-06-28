@@ -6,6 +6,7 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.optimizers import Adam, SGD, RMSprop, Adamax, Adadelta
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import one_hot
+import tensorflow_addons as tfa
 
 from utils import helper
 from utils.config import config
@@ -66,9 +67,10 @@ class SentimentAnalysis:
         model.compile(optimizer=self.optim[config['optim']](learning_rate=config['learning_rate']), loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy",tf.keras.metrics.Precision(),tf.keras.metrics.Recall(),tf.keras.metrics.AUC()])
         # print(model.summary())
 
+        tqdm_callback = tfa.callbacks.TQDMProgressBar()
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1,patience=5)  
         mc = ModelCheckpoint(config['save_model_path'] + method + "_model.h5", monitor='val_loss', mode='min', save_best_only=True,verbose=1)
-        model.fit(trainX, trainY, validation_data=(validX, validY), epochs=epochs, callbacks=[es, mc], verbose=1)
+        model.fit(trainX, trainY, validation_data=(validX, validY), epochs=epochs, callbacks=[mc, tqdm_callback], verbose=0)
         model.save_weights(config['save_weights_path'] + method + "_weights.h5", overwrite=True)
 
         return model
