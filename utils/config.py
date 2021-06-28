@@ -12,7 +12,7 @@ config = {
     'stop_words':stop_words,
     'punctuations':"""'!"-#$%&'()*+,«».؛،/:؟?@[\]^_`{|}~""",
 
-    'epochs':50,
+    'epochs':70,
     'batch_size':32,
     'optim':'SGD', # other - adamax, adadelta, SGD, Adam, RMSprop
     'learning_rate':5e-3,
