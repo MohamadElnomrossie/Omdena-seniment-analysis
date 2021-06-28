@@ -32,7 +32,6 @@ class SentimentAnalysis:
             self.maxlen = maxlen
         if self.vocab_size == 'auto':
             self.vocab_size = vocab
-        # print(vocab, maxlen)
         return tokens
 
 
@@ -48,7 +47,6 @@ class SentimentAnalysis:
             all_.extend(x)
         word_dict = helper.word_dictionary(all_)
         if return_label:
-            #label = preprocessing.LabelEncoder().fit_transform(label)
             onehot_encoder = preprocessing.OneHotEncoder(sparse=False)
             label = np.array(label).reshape(len(label), 1)
             label = onehot_encoder.fit_transform(label)
@@ -57,15 +55,10 @@ class SentimentAnalysis:
 
 
     def fit(self, trainX, trainY, validation_data=(), epochs=10, method='simpleRNN'):
-        # trainX, validX, trainY, validY = model_selection.train_test_split(text, label, test_size=test_size, random_state=42, shuffle=True)
 
         validX, validY = validation_data
-        # trainX = tf.Tensor(tf.data.Dataset.from_tensors(tf.constant(trainX)).batch(16, drop_remainder=True), value_index=, dtype=tf.int32)
-        # validY = tf.constant(validY).set_shape([16, validY.shape[0], validY.shape[1]])
-        # print(trainX.shape, validX.shape, trainY.shape, validY.shape)
         model = helper.get_model(trainX, trainY, self.vocab_size, self.embedding_vector, self.maxlen, self.method)
         model.compile(optimizer=self.optim[config['optim']](learning_rate=config['learning_rate']), loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy",tf.keras.metrics.Precision(),tf.keras.metrics.Recall(),tf.keras.metrics.AUC()])
-        # print(model.summary())
 
         tqdm_callback = tfa.callbacks.TQDMProgressBar()
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1,patience=5)  
@@ -82,7 +75,6 @@ class SentimentAnalysis:
     def predict_(self, text, model, batch_size=32, print_=True):
         text = helper.predict(text, model, self.tokenizer, self.vocab_size, self.maxlen)
         pred = model.predict(text, batch_size=batch_size)
-        # print(pred)
         if print_:
             for p in pred:
                 print('-'*20)
