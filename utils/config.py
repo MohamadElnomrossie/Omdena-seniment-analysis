@@ -5,7 +5,7 @@ with open("Datasets/stopWords.pkl", 'rb') as f:
 
 config = {
     'vocab_size':60000,
-    'maxlen':256,
+    'maxlen':180,
     'embedding_vector':100,
 
     'method':'1DConv', #other - simpleRNN, bidRNN, 1DConv, lstm
@@ -14,7 +14,7 @@ config = {
 
     'epochs':50,
     'optim':'adam', # other - adamax, adadelta, SGD, Adam, RMSprop
-    'learning_rate':1e-4,
+    'learning_rate':1e-3,
 
     'save_model_path':'models/',
     'save_weights_path':"models/",

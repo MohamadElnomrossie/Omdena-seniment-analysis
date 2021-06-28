@@ -4,6 +4,7 @@ from tensorflow.keras.models import *
 from tensorflow.keras.layers import concatenate
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import one_hot
+from tensorflow.keras.regularizers import l1, l2
 from sklearn.model_selection import StratifiedKFold
 
 def get_folds(df, source, target, split=4, getvalue=0):
@@ -64,17 +65,17 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
     elif method == "1DConv":
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
-        model.add(Convolution1D(filters=64,kernel_size=7,activation='relu'))
+        model.add(Convolution1D(filters=64,kernel_size=7,activation='relu', kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
         model.add(MaxPooling1D(pool_size=3))
-        model.add(Convolution1D(filters=64,kernel_size=7,activation='relu'))
+        model.add(Convolution1D(filters=64,kernel_size=7,activation='relu', kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
         model.add(MaxPooling1D(pool_size=3))
         model.add(Dropout(0.5))
-        model.add(Convolution1D(filters=32,kernel_size=3,activation='relu'))
+        model.add(Convolution1D(filters=32,kernel_size=3,activation='relu', kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
         model.add(MaxPooling1D(pool_size=3))
         model.add(Flatten())
-        model.add(Dense(activation='relu',units=64))
+        model.add(Dense(activation='relu',units=64, kernel_regularizer=l2(0.001)))
         model.add(Dropout(0.2))
-        model.add(Dense(activation='relu',units=32))
+        model.add(Dense(activation='relu',units=32, kernel_regularizer=l2(0.001)))
         model.add(Dropout(0.2))
         model.add(Dense(units=3,activation='softmax'))
 
