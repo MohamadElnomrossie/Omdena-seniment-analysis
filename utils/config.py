@@ -13,7 +13,7 @@ config = {
     'punctuations':"""'!"-#$%&'()*+,«».؛،/:؟?@[\]^_`{|}~""",
 
     'epochs':50,
-    'optim':'Adam', # other - adamax, adadelta, SGD, Adam, RMSprop
+    'optim':'adam', # other - adamax, adadelta, SGD, Adam, RMSprop
     'learning_rate':1e-4,
 
     'save_model_path':'models/',
