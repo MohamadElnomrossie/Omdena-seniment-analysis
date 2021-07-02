@@ -187,6 +187,7 @@ class SentimentIdentification(object):
         self.max_seq_length=max_seq_length
         self.lr=lr
         self.model_path=model_path
+        self.__arabert_prep = ArabertPreprocessor(self.model_name.split("/")[-1])
   def create_label2ind_file(self):
 
     self.label_map = { v:index for index, v in enumerate(self._labels_sorted) }
@@ -202,12 +203,14 @@ class SentimentIdentification(object):
         json.dump(self.label_map, json_file)
 
   def data_prepare_BERT(self,X_train,y_train):
+    X_train = X_train.apply(self.__arabert_prep.preprocess)
 
     train_dataset = BERTDataset(X_train.to_list(),y_train.to_list(),self.model_name,self.max_seq_length,self.label_map)
     
       
     return train_dataset
   def data_prepare_BERT_test(self,X_test):
+    X_test = X_test.apply(self.__arabert_prep.preprocess)
 
     test_dataset = BERTDatasetTest(X_test.to_list(),self.model_name,self.max_seq_length,self.label_map)
     
@@ -312,10 +315,10 @@ class SentimentIdentification(object):
     result = collections.deque()
     convert = lambda x: x     
     for i in range(0,len(predicted)):
-      for j, val in enumerate(self.label_map):
+      for j, val in self.label_map.items():
       
-        if j==predicted[i]:
-          result.append(convert(SentIDPred(val, probabilities[i])))
+        if val==predicted[i]:
+          result.append(convert(SentIDPred(j, probabilities[i])))
           break
 
         
@@ -433,6 +436,7 @@ class SentimentIdentificationPrediction(object):
         self.task='classification'
         self.batch_size=batch_size
         self.max_seq_length=max_seq_length
+        self.__arabert_prep = ArabertPreprocessor(self.model_name.split("/")[-1])
         if label2index is None:
           self.label_map = json.load(open(LABEL_2_INDEX_PATH))
         else:
@@ -485,12 +489,14 @@ class SentimentIdentificationPrediction(object):
 
         
   def data_prepare_BERT(self,X_train,y_train):
+    X_train = X_train.apply(self.__arabert_prep.preprocess)
 
     train_dataset = BERTDataset(X_train.to_list(),y_train.to_list(),self.model_name,self.max_seq_length,self.label_map)
     
       
     return train_dataset
   def data_prepare_BERT_test(self,X_test):
+    X_test = X_test.apply(self.__arabert_prep.preprocess)
 
     test_dataset = BERTDatasetTest(X_test.to_list(),self.model_name,self.max_seq_length,self.label_map)
     
@@ -551,10 +557,10 @@ class SentimentIdentificationPrediction(object):
     result = collections.deque()
     convert = lambda x: x     
     for i in range(0,len(predicted)):
-      for j, val in enumerate(self.label_map):
+      for j, val in self.label_map.items():
       
-        if j==predicted[i]:
-          result.append(convert(SentIDPred(val, probabilities[i])))
+        if val==predicted[i]:
+          result.append(convert(SentIDPred(j, probabilities[i])))
           break
 
         
