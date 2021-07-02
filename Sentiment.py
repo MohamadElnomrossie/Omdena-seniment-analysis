@@ -58,7 +58,7 @@ class SentimentAnalysis:
 
         validX, validY = validation_data
         model = helper.get_model(trainX, trainY, self.vocab_size, self.embedding_vector, self.maxlen, self.method)
-        model.compile(optimizer=self.optim[config['optim']](learning_rate=config['learning_rate']), loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy",tf.keras.metrics.Precision(),tf.keras.metrics.Recall(),tf.keras.metrics.AUC()])
+        model.compile(optimizer='SGD', loss=tf.keras.losses.CategoricalCrossentropy(), metrics=["accuracy",tf.keras.metrics.Precision(),tf.keras.metrics.Recall(),tf.keras.metrics.AUC()])
 
         tqdm_callback = tfa.callbacks.TQDMProgressBar()
         es = EarlyStopping(monitor='val_loss', mode='min', verbose=1,patience=5)  
