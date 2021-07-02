@@ -1,0 +1,5 @@
+!pip install optuna==2.3.0
+!pip install transformers==4.2.1
+!pip install farasapy
+!pip install pyarabic
+!git clone https://github.com/aub-mind/arabert
