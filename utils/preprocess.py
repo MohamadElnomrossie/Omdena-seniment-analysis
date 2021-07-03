@@ -10,6 +10,15 @@ def tokenizer(
     punctuations = config['punctuations'],
     stop_words=config['stop_words']
     )->list:
+    """
+    helper function to tokenize texts
+    params:
+    texts: list of texts
+    punctuations: punctuations string
+    stop_words: list of stop words
+    retuns:
+    tokenized texts
+    """
 
     list_ = []
     maxlen = 0

@@ -10,6 +10,17 @@ from sklearn.model_selection import StratifiedKFold
 
 # OPTIONAL - spliting the data as folds with strtifying the labels
 def get_folds(df, source, target, split=4, getvalue=0):
+    """
+    helper function to generate folds
+    params:
+    df: dataframe to get folds
+    source: text column name in the data 
+    target: target column name in the data
+    split: no of splits
+    getvalue: get ith splitted data 
+    retuns:
+    splitted dataframe
+    """
     df.loc[:, "kfold"] = -1
 
     #shuffling the data
@@ -28,6 +39,13 @@ def get_folds(df, source, target, split=4, getvalue=0):
 # function to return the word dictionary, 
 # word with its encoding 
 def word_dictionary(text):
+    """
+    helper function to generate word index
+    params:
+    text: tokenized list of text
+    retuns:
+    dictionary of words with its index
+    """
 
     # removing duplicate texts
     text = set(list(text))
@@ -42,6 +60,17 @@ def word_dictionary(text):
 
 # prediction function for inference
 def predict(text, model, tokenize, vocab, maxlen):
+    """
+    helper function to predict results on new data
+    params:
+    text: vectorized list of text
+    model: trained model
+    tokenize: tokenizer reference to tokenize the text
+    vocab_size: total vocabulary size of the data
+    maxlen: maximum length of the texts
+    retuns:
+    list of prediction
+    """
 
     # returns the tokenized texts
     text, _, _ = tokenize(text)
@@ -58,8 +87,19 @@ def predict(text, model, tokenize, vocab, maxlen):
     return vector
 
 
-#helper method to get the model architechture needed for the model specified
 def get_model(X, y, vocab_size, embedding_size, maxlen, method):
+    """
+    helper function to get the model architecture
+    params:
+    X: vectorized list of text
+    y: list of labels
+    vocab_size: total vocabulary size of the data
+    embedding_size: embedding dim for the model
+    maxlen: maximum length of the texts
+    method
+    returns:
+    model: model architecture
+    """
 
     #simpleRNN model architecture
     #layers including - Embedding, SimpleRNN, Dense

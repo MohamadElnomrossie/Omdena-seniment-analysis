@@ -14,7 +14,18 @@ from utils.config import config
 
 #Main class for sentiment analysis
 class SentimentAnalysis:
-    #constructor to load the parameters needed to process
+    """
+    Class to instantiate the analytics functions
+    for the analysis
+    params:
+    tokenizer: helper to convert tokens
+    vocab_size: vocabulary size for the texts
+    max_len: maximum length of texts
+    embedding_vector: embedding vector dimention for the model
+    method: model name
+    """
+
+
     def __init__(self, tokenizer, vocab_size=30000, maxlen=256, embedding_vector=50, method="simpleRNN"):
         #model name for training
         self.method = method
@@ -35,8 +46,16 @@ class SentimentAnalysis:
                     'RMSprop':RMSprop}
 
 
-    #helper tokenization function to create tokens for the text
     def tokenize(self, text, punctuations=[], stop_words=[]):
+        """
+        helper function to convert sentences to tokens
+        params:
+        text: texts
+        punctuations: list of punctuations for removing in the text
+        stop_words: stop words list for the text
+        returns:
+        tokens: splitted tokens
+        """
 
         #returns the tokens, maxlen found within the text and vocab size
         tokens, maxlen, vocab = self.tokenizer(text, punctuations, stop_words)
@@ -50,9 +69,16 @@ class SentimentAnalysis:
         return tokens
 
 
-    # vectorizing all the tokens provided
     def vectorize(self, text, label, return_label=True):
-
+        """
+        helper function to vectorize tokens
+        params:
+        text: tokenized list of text
+        label: list of labels
+        return_label: optional, to return the labels
+        returns:
+        vectors: vectorized tokens
+        """
         vector, temp, all_ = [], [], []
         # prcessing each text individually
         for d in text:
@@ -84,9 +110,19 @@ class SentimentAnalysis:
         return vector, list(word_dict.keys()), word_dict
 
 
-    # fit method to fit the data to the model
     def fit(self, trainX, trainY, validation_data=(), epochs=10, batch_size=32, method='simpleRNN'):
-
+        """
+        helper function to train vectors of text with the labels
+        params:
+        trainX: vectorized list of text
+        trainY: list of labels
+        validation_data: optional, data for validating
+        epochs: iteration number
+        batch_size: batch size for data
+        method: model name
+        returns:
+        model: trained model
+        """
         validX, validY = validation_data
 
         #helper method tp get the appropriate model
@@ -111,12 +147,30 @@ class SentimentAnalysis:
 
     #custom evaluate function to test on test data
     def evaluate(self, text, label, model, batch_size=32):
+        """
+        helper function to evaluate on new data
+        params:
+        text: vectorized list of text
+        label: list of labels
+        model: trained model
+        batch_size: batch size for data
+        """
         loss, acc, pre, rec, auc  = model.evaluate(text, label, workers=-1, batch_size=batch_size)
         print("\nValidation loss: {}  Validation acc: {} Precision: {} Recall: {} Auc Roc: {}".format(loss, acc, pre, rec, auc))
 
 
     # custom predict function for inferencing
     def predict_(self, text, model, batch_size=32, print_=True):
+        """
+        helper function to predict results on new data
+        params:
+        text: vectorized list of text
+        model: trained model
+        batch_size: batch size for data
+        print_: OPTIONAL, if True, just prints, else returns as list
+        retuns:
+        list of prediction
+        """
         # helper method to vectorize the text
         text = helper.predict(text, model, self.tokenizer, self.vocab_size, self.maxlen)
 
