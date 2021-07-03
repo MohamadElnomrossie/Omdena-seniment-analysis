@@ -7,27 +7,47 @@ from tensorflow.keras.preprocessing.text import one_hot
 from tensorflow.keras.regularizers import l1, l2
 from sklearn.model_selection import StratifiedKFold
 
+
+# OPTIONAL - spliting the data as folds with strtifying the labels
 def get_folds(df, source, target, split=4, getvalue=0):
     df.loc[:, "kfold"] = -1
+
+    #shuffling the data
     df = df.sample(frac=1).reset_index(drop=True)
     X = df[source].values
     y = df[target].values
+
+    # initializing the onject for the strtifiedkold class with custom splits
     skf = StratifiedKFold(n_splits=split)
 
     for fold_, (train_, val_) in enumerate(skf.split(X=X, y=y)):
         df.loc[val_, "kfold"] = fold_
     return df.loc[df['kfold'] == getvalue]
 
+
+# function to return the word dictionary, 
+# word with its encoding 
 def word_dictionary(text):
+
+    # removing duplicate texts
     text = set(list(text))
+
+    # creating a dictionary with word and its id
     dictionary = {}
     for i, word in enumerate(text):
         dictionary[word] = i
 
     return dictionary
 
+
+# prediction function for inference
 def predict(text, model, tokenize, vocab, maxlen):
+
+    # returns the tokenized texts
     text, _, _ = tokenize(text)
+
+    #encoding each token in the text with ids
+    #and returing after padding with maxlen
     vector, temp = [], []
     for d in text:
         for i in d:
@@ -37,7 +57,12 @@ def predict(text, model, tokenize, vocab, maxlen):
     vector = pad_sequences(vector, maxlen=maxlen, padding="post")
     return vector
 
+
+#helper method to get the model architechture needed for the model specified
 def get_model(X, y, vocab_size, embedding_size, maxlen, method):
+
+    #simpleRNN model architecture
+    #layers including - Embedding, SimpleRNN, Dense
     if method == "simpleRNN":
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
@@ -50,6 +75,8 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(Dense(32, activation='relu'))
         model.add(Dense(3, activation='softmax'))
     
+    #bidRNN model architecture
+    #layers including - Embedding, lstm, Dense
     elif method == "bidRNN":
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
@@ -62,6 +89,8 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(Dense(32, activation='relu'))
         model.add(Dense(3, activation='softmax'))
 
+    #1DConv model architecture
+    #layers including - Embedding, Convolution1D, Dense
     elif method == "1DConv":
         model = Sequential()
         model.add(Embedding(vocab_size, embedding_size, input_length=maxlen ,name="embedding"))
@@ -77,6 +106,8 @@ def get_model(X, y, vocab_size, embedding_size, maxlen, method):
         model.add(Dense(activation='relu',units=32))
         model.add(Dense(units=3,activation='softmax'))
 
+    #lstm model architecture
+    #layers including - Embedding, lstm, Dense
     elif method == "lstm":
         sequence = Input(shape=(maxlen,), dtype='int32')
         embedded = Embedding(vocab_size, embedding_size, input_length=maxlen)(sequence)
