@@ -18,6 +18,7 @@ if __name__ == '__main__':
     #remove null values
     data = data.dropna().reset_index(drop=True)
 
+    #array of strings
     #convert text column from series object to ndarray
     text = data["Text"].values
 
@@ -27,14 +28,14 @@ if __name__ == '__main__':
     #initializing an object for the main sentiment class
     sentiment = SentimentAnalysis(preprocess.tokenizer,
                                 vocab_size=60000,
-                                maxlen=256,
+                                maxlen=180,
                                 embedding_vector=300,
                                 method="lstm",) #method need to accsess processing technique related to the model provided
 
                                 
     #calling the helper predict function for inferencing from the sentiment class
-    preds = sentiment.predict_(text, model, batch_size=32, print_=False)
-    #note : use print_=True to just print the results without returing
+    preds = sentiment.predict_(text, model, batch_size=32, print_=True)
+    #note : use print_=False to just return array of prediction
 
     #add the results to the data as a series column
     data["prediction"] = preds

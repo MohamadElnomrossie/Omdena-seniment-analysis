@@ -171,25 +171,26 @@ class SentimentAnalysis:
         retuns:
         list of prediction
         """
+        temp = text.copy()
         # helper method to vectorize the text
-        text = helper.predict(text, model, self.tokenizer, self.vocab_size, self.maxlen)
+        temp = helper.predict(temp, model, self.tokenizer, self.vocab_size, self.maxlen)
 
         # defined method to predict results from the model
-        pred = model.predict(text, batch_size=batch_size)
+        pred = model.predict(temp, batch_size=batch_size)
 
-        # conditional - if print_, its just prints the results
+        # conditional - if print_, its just returns the results as dictionary with probabilities
         # if not returns the prediction as an array
         if print_:
-            for p in pred:
-                print('-'*20)
-                pp = np.argmax(p)
-                if pp == 0:
-                    print(f"Negative {p[pp]}")
-                elif pp == 1:
-                    print(f"Neutral {p[pp]}")
-                else:
-                    print(f"Positive {p[pp]}")
-                print('-'*20)
+            result = dict()
+            for i, p in enumerate(pred):
+                preds = {
+                    'Neutral':p[1],
+                    'Negative':p[0],
+                    'Positive':p[2],
+                }
+                #result[text[i].encode("unicode_escape")]=preds
+                result[text[i]]=preds
+            return result
         else:
             gtruth = ["Negative", "Neutral", "Positive"]
             return [gtruth[np.argmax(p)] for p in pred]
