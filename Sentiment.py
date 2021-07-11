@@ -183,11 +183,9 @@ class SentimentAnalysis:
         if print_:
             result = dict()
             for i, p in enumerate(pred):
-                preds = {
-                    'Neutral':p[1],
-                    'Negative':p[0],
-                    'Positive':p[2],
-                }
+                preds = [{'label:':'Neutral','score:':p[1],},
+                        {'label:':'Negative','score:':p[0],},
+                        {'label:':'Positive','score:':p[2],}]
                 #result[text[i].encode("unicode_escape")]=preds
                 result[text[i]]=preds
             return result
