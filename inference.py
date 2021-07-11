@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
                                 
     #calling the helper predict function for inferencing from the sentiment class
-    preds = sentiment.predict_(text, model, batch_size=32, print_=True)
+    preds = sentiment.predict_(text, model, batch_size=32, print_=False)
     #note : use print_=False to just return array of prediction
 
     #add the results to the data as a series column
